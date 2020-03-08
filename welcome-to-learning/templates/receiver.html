@@ -1,0 +1,66 @@
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<div class="col-md-6 col-md-offset-3">
+  <div class="alert alert-success hidden" id="message">Thank You for subscribing! Please close the browser to receive notifications.</div>
+</div>
+
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/7.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.10.0/firebase-messaging.js"></script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+
+<script>
+  // Your web app's Firebase configuration
+  var firebaseConfig = {
+    apiKey: "AIzaSyD2oGgE-vfRnwdBOQTwaB25fmikDAal3J0",
+    authDomain: "pcte-demo.firebaseapp.com",
+    databaseURL: "https://pcte-demo.firebaseio.com",
+    projectId: "pcte-demo",
+    storageBucket: "pcte-demo.appspot.com",
+    messagingSenderId: "1043390859055",
+    appId: "1:1043390859055:web:9ab734eea740bf6a22c3da"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+
+  const messaging = firebase.messaging();
+  
+  messaging.usePublicVapidKey('BGx7b7aKp2_P_fMCEQV96DP6V2vDq4ZAifWr9rp8jcr27YYgPy8XI4e9YgQcCgTnhCHGlu4Hv1nbkNOrd1INctk');
+
+
+  messaging.getToken().then((currentToken) => {
+    if (currentToken) {
+      sendTokenToServer(currentToken);
+    } else {
+      setTokenSentToServer(false);
+    }
+    updateUIForPushEnabled();
+  }).catch((err) => {
+    console.log('An error occurred while retrieving token. ', err);
+  });
+
+  function sendTokenToServer(token) {
+    $.ajax({
+      url: '/capture-token',
+      data: {token: token}
+    }).done(function(data) {
+      console.log(data)
+    })
+    console.log(token);
+  }
+
+  function updateUIForPushEnabled() {
+    $('#message').removeClass('hidden');
+  }
+
+</script>
